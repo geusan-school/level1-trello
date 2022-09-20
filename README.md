@@ -21,23 +21,24 @@
 
 
 ## 강의 순서
-
-1. node와 npm 설치([NVM](https://github.com/nvm-sh/nvm))
-2. npm을 이용한 라이브러리 설치
+1. 현재 레포를 fork
+2. [vscode](https://code.visualstudio.com/docs/setup/mac) 설치
+3. node와 npm 설치([NVM](https://github.com/nvm-sh/nvm))
+4. npm을 이용한 라이브러리 설치
    1. CRA(create-react-app)을 이용한 리액트 프로젝트 구성
    2. CNA(create-next-app)을 이용한 NextJS 프로젝트 구성
-3. React Component 만들기
+5. React Component 만들기
    1. import와 export를 하는 방법
    2. Class Component 와 Functional Component의 차이
    3. React-hook의 이해
    4. Component Styling 하기
-4. 스타일링을 도와 줄 [Chakra-ui](https://chakra-ui.com/) 설치
+6. 스타일링을 도와 줄 [Chakra-ui](https://chakra-ui.com/) 설치
    1. Box를 사용하는 방법(3-1의 Styling을 해보기)
-5. 트렐로 모양 만들기
+7. 트렐로 모양 만들기
    1. Section 만들기
    2. Secion안에 들어가는 Task Card 만들기
    3. TaskCard 클릭시 보여줄 Modal 만들기
-6. 과제 안내
+8. 과제 안내
    1. 토요일 자정까지 트렐로 만들기
       1. Section, Card, Modal, Checklist
 
