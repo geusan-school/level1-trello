@@ -81,6 +81,9 @@ export default function Section({ title: sectionTitle, index }: { title: string,
   const moveRightTask = (task: TaskType) => {
     moveTask(index, index + 1, task);
   }
+  const moveLeftTask = (task: TaskType) => {
+    moveTask(index, index - 1, task);
+  }
   return (
     <Box bg="tomato" flex={1} borderRadius={4} p={4}>
       <Heading>{sectionTitle}</Heading>
@@ -101,6 +104,9 @@ export default function Section({ title: sectionTitle, index }: { title: string,
             </Button>
             <Button onClick={() => moveDownTask(task)}>
               아래로
+            </Button>
+            <Button onClick={() => moveLeftTask(task)}>
+               왼쪽으로
             </Button>
             <Button onClick={() => moveRightTask(task)}>
               오른쪽으로

@@ -1,5 +1,6 @@
 import { Box } from '@chakra-ui/react'
 import type { NextPage } from 'next'
+import { NextSeo } from 'next-seo'
 import React, { useState } from 'react'
 import Section from '../src/components/Section'
 
@@ -48,6 +49,8 @@ const Home: NextPage = () => {
     });
   }
   const moveTask = (beforeSectionIndex: number, afterSectionIndex: number, task: TaskType) => {
+    if (tasks.length === afterSectionIndex) return;
+    if (afterSectionIndex < 0) return;
     deleteTask(beforeSectionIndex, task);
     addTask(afterSectionIndex, task);
   }
@@ -55,6 +58,8 @@ const Home: NextPage = () => {
     setTasks(prev => {
       const idx = prev[sectionIndex].findIndex(t => t.id === task.id);
       const anotherIndex = idx + movement;
+      if (anotherIndex < 0) return prev;
+      if (anotherIndex === prev[sectionIndex].length) return prev;
       return [
         ...prev.slice(0, sectionIndex),
         [
@@ -75,6 +80,16 @@ const Home: NextPage = () => {
 
   return (
     <TrelloContext.Provider value={{ tasks, addTask, deleteTask, moveTask, swapTask }}>
+      <NextSeo 
+        title="규산투두리스트"
+        openGraph={{
+          title: '규산투두리스트',
+          description: '규산스쿨 첫번째 강의 트렐로',
+          images: [
+            { url: 'https://upload.wikimedia.org/wikipedia/ko/8/81/Spongebob_4795.jpg' },
+          ]
+        }}
+      />
       <Box display="flex" justifyContent="space-between" p={4}>
         <Section title="To Do" index={0} />
         <Box w={4} />
