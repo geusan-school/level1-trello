@@ -2,43 +2,14 @@ import { Box, Button, Heading, Input, Modal, ModalBody, ModalContent, ModalFoote
 import { useContext, useState } from "react";
 import { TaskType, TrelloContext } from "../../pages";
 
-const DATA = [
-  {
-    id: 1,
-    title: "1",
-    description: "content1"
-  },
-  {
-    id: 2,
-    title: "2",
-    description: "content2"
-  },
-  {
-    id: 3,
-    title: "3",
-    description: "content3"
-  },
-  {
-    id: 4,
-    title: "4",
-    description: "content4"
-  },
-  {
-    id: 5,
-    title: "5",
-    description: "content5"
-  },
-]
-
 export default function Section({ title: sectionTitle, index }: { title: string, index: number }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const { isOpen: updateModalIsOpen, onClose: onUpdateModalClose, onOpen: onUpdateModalOpen } = useDisclosure();
   const [currentId, setCurrentId] = useState(-1);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [, setTasks] = useState<TaskType[]>(DATA);
   const openCreateModal = () => onOpen();
-  const { addTask: handleAddTask, tasks: sections, moveTask, deleteTask, swapTask } = useContext(TrelloContext);
+  const { addTask: handleAddTask, tasks: sections, moveTask, deleteTask, swapTask, updateTask: handleUpdateTask } = useContext(TrelloContext);
   const tasks = sections[index];
   const addTask = () => {
     // 카드 추가
@@ -60,16 +31,13 @@ export default function Section({ title: sectionTitle, index }: { title: string,
     setCurrentId(task.id);
   }
   const updateTask = () => {
-    const idx = tasks.findIndex(t => t.id === currentId);
-    setTasks([
-      ...tasks.slice(0, idx),
-      {
-        id: currentId,
-        title,
-        description,
-      },
-      ...tasks.slice(idx + 1),
-    ]);
+    const task = tasks.find(t => t.id === currentId);
+    if (!task) return;
+    task.title = title;
+    task.description = description;
+    handleUpdateTask(index, task);
+    setTitle('');
+    setDescription('');
     onUpdateModalClose();
   }
   const moveUpTask = (task: TaskType) => {

@@ -15,6 +15,7 @@ type ContextProps = {
   deleteTask(sectionIndex: number, newTask: TaskType): void,
   moveTask(beforeSectionIndex: number, afterSectionIndex: number, newTask: TaskType): void,
   swapTask(sectionIndex: number, task: TaskType, movement: number): void,
+  updateTask(sectionIndex: number, task: TaskType): void,
 }
 export const TrelloContext = React.createContext<ContextProps>({
   tasks: [],
@@ -78,8 +79,23 @@ const Home: NextPage = () => {
     })
   };
 
+  const updateTask = (sectionIndex: number, task: TaskType) => {
+    setTasks(prev => {
+      const idx = prev[sectionIndex].findIndex(t => t.id === task.id);
+      return [
+        ...prev.slice(0, sectionIndex),
+        [
+          ...prev[sectionIndex].slice(0, idx),
+          task,
+          ...prev[sectionIndex].slice(idx + 1),
+        ],
+        ...prev.slice(sectionIndex+1),
+      ];
+    })
+  }
+
   return (
-    <TrelloContext.Provider value={{ tasks, addTask, deleteTask, moveTask, swapTask }}>
+    <TrelloContext.Provider value={{ tasks, addTask, deleteTask, moveTask, swapTask, updateTask }}>
       <NextSeo 
         title="규산투두리스트"
         openGraph={{
