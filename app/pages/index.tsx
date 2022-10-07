@@ -2,6 +2,8 @@ import { Box } from '@chakra-ui/react'
 import type { NextPage } from 'next'
 import { NextSeo } from 'next-seo'
 import React, { useState } from 'react'
+import { DragDropContext, DragDropContextProps } from 'react-beautiful-dnd'
+import { nanoid } from 'nanoid';
 import Section from '../src/components/Section'
 
 export type TaskType = {
@@ -21,11 +23,29 @@ export const TrelloContext = React.createContext<ContextProps>({
   tasks: [],
 } as any);
 
+
+const generateId = () => Math.round(Math.random() * 100000) + Date.now();
+const createSampleTask = (): TaskType => ({
+  id: generateId(),
+  title: `Item ${nanoid()}`,
+  description: `Lorem Ipsum ${nanoid(50)}`,
+});
+
+const getItems = (startOrEnd: number, end?: number) => {
+  const array = [];
+  const startIdx = end ? startOrEnd : 0;
+  const endIdx = end || startOrEnd;
+  for (let j = startIdx; j < endIdx; j+=1) {
+    array.push(createSampleTask())
+  }
+  return array;
+}
+
 const Home: NextPage = () => {
   const [tasks, setTasks] = useState<TaskType[][]>([
-    [],
-    [],
-    [],
+    getItems(10),
+    getItems(10),
+    getItems(10),
   ]);
   const addTask = (sectionIndex: number, newTask: TaskType) => {
     setTasks(prev => {
@@ -94,6 +114,38 @@ const Home: NextPage = () => {
     })
   }
 
+  const onDragEnd: DragDropContextProps['onDragEnd'] = (result) => {
+    const { source, destination } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    const beforeSectionIndex = +source.droppableId;
+    const afterSectionIndex = +destination.droppableId;
+
+    console.log(beforeSectionIndex, afterSectionIndex)
+
+    // 이전이랑 위치가 같은 경우
+    if (beforeSectionIndex === afterSectionIndex) {
+      // 재정렬
+      setTasks(prev => {
+        const [temp] = prev[beforeSectionIndex].splice(source.index, 1);
+        prev[afterSectionIndex].splice(destination.index, 0, temp);
+        return prev;
+      })
+      return;
+    }
+    // 이전과 위치가 다른 경우
+    // 새로운 곳으로 태스크 카드 이동
+    setTasks(prev => {
+      const [temp] = prev[beforeSectionIndex].splice(source.index, 1);
+      prev[afterSectionIndex].splice(destination.index, 0, temp);
+      return prev;
+    })
+    return;
+  };
+
   return (
     <TrelloContext.Provider value={{ tasks, addTask, deleteTask, moveTask, swapTask, updateTask }}>
       <NextSeo 
@@ -106,13 +158,15 @@ const Home: NextPage = () => {
           ]
         }}
       />
-      <Box display="flex" justifyContent="space-between" p={4}>
-        <Section title="To Do" index={0} />
-        <Box w={4} />
-        <Section title="Doing" index={1} />
-        <Box w={4} />
-        <Section title="Done" index={2} />
-      </Box>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Box display="flex" justifyContent="space-between" p={4}>
+          <Section title="To Do" index={0} />
+          <Box w={4} />
+          <Section title="Doing" index={1} />
+          <Box w={4} />
+          <Section title="Done" index={2} />
+        </Box>
+      </DragDropContext>
     </TrelloContext.Provider>
   )
 }
