@@ -19,10 +19,10 @@ import mysql from 'mysql';
 
 function main() {
   const connection = mysql.createConnection({
-    host: "geusan-db.cvbvu7kjngtu.ap-northeast-2.rds.amazonaws.com",
+    host: "***",
     port: 3306,
-    user: "root",
-    password: "rootroot",
+    user: "***",
+    password: "***",
     database: "trello",
   });
   connection.connect((err) => {
