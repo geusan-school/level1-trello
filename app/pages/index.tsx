@@ -28,6 +28,14 @@ const Home: NextPage = () => {
     [],
   ]);
   const addTask = (sectionIndex: number, newTask: TaskType) => {
+    fetch('/api/tasks', {
+      method: 'POST',
+      body: JSON.stringify({
+        title: newTask.title,
+        description: newTask.description,
+        section: sectionIndex,
+      }),
+    })
     setTasks(prev => {
       return [
         ...prev.slice(0, sectionIndex),
